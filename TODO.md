@@ -5,19 +5,20 @@
 ---
 
 ## Up Next
-- [ ] Backend: schemas (request/response shapes)
-- [ ] Backend: routers (weight, medications, users, stats)
-- [ ] Backend: pytest setup + first tests
 - [ ] Frontend: React app scaffold
 - [ ] Frontend: Docker setup
 - [ ] Frontend: dashboard layout
 - [ ] Frontend: weight chart with ApexCharts
 - [ ] Frontend: medication dose overlay annotations
-- [ ] Frontend: CSV import flow
+- [ ] Frontend: CSV import flow (seed personal data)
 - [ ] CI: GitHub Actions workflow
+- [ ] Backend: stats endpoint (weight trend, dose correlation)
 
 ## Completed
-- [x] Backend: database.py — SQLAlchemy connection, session, Base
+- [x] Backend: schemas — User, WeightLog, Medication, MedicationDose (Create/Update/Response)
+- [x] Backend: routers — users, weight-logs, medications + doses (full CRUD)
+- [x] Backend: pytest setup + 6 passing tests (weight logs)
+- [x] Backend: database.py — SQLAlchemy connection, session, Base, get_db
 - [x] Backend: models — User, WeightLog, Medication, MedicationDose
 - [x] Backend: Alembic setup + migration — all 4 tables created in Postgres
 - [x] Stack decisions

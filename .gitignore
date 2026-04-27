@@ -22,3 +22,4 @@ build/
 
 # Docker
 *.log
+backend/test.db
