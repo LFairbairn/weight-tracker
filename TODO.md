@@ -5,16 +5,18 @@
 ---
 
 ## Up Next
-- [ ] Frontend: React app scaffold
-- [ ] Frontend: Docker setup
-- [ ] Frontend: dashboard layout
-- [ ] Frontend: weight chart with ApexCharts
-- [ ] Frontend: medication dose overlay annotations
-- [ ] Frontend: CSV import flow (seed personal data)
 - [ ] CI: GitHub Actions workflow
 - [ ] Backend: stats endpoint (weight trend, dose correlation)
+- [ ] Frontend: waist measurement chart or toggle
+- [ ] Frontend: add/edit weight log form
 
 ## Completed
+- [x] Frontend: React app scaffold (Vite)
+- [x] Frontend: Docker setup
+- [x] Frontend: dashboard layout (dark theme, stat cards)
+- [x] Frontend: weight chart with ApexCharts
+- [x] Frontend: medication dose overlay annotations
+- [x] Frontend: CSV import via seed script (61 entries + 4 dose changes)
 - [x] Backend: schemas — User, WeightLog, Medication, MedicationDose (Create/Update/Response)
 - [x] Backend: routers — users, weight-logs, medications + doses (full CRUD)
 - [x] Backend: pytest setup + 6 passing tests (weight logs)
