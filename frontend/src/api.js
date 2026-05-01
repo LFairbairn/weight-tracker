@@ -1,5 +1,11 @@
 const BASE = '/api'
 
+export async function getUser() {
+  const res = await fetch(`${BASE}/users/me`)
+  if (!res.ok) throw new Error('Failed to fetch user')
+  return res.json()
+}
+
 export async function getWeightLogs() {
   const res = await fetch(`${BASE}/weight-logs`)
   if (!res.ok) throw new Error('Failed to fetch weight logs')

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
-import { getWeightLogs, getMedications, getMedicationDoses } from '../api'
+import { getWeightLogs, getMedications, getMedicationDoses, getUser } from '../api'
 import WeightChart from './WeightChart'
 
 export default function Dashboard() {
+  const [user, setUser] = useState(null)
   const [weightLogs, setWeightLogs] = useState([])
   const [doses, setDoses] = useState([])
   const [loading, setLoading] = useState(true)
@@ -13,6 +14,9 @@ export default function Dashboard() {
       try {
         const logs = await getWeightLogs()
         setWeightLogs(logs)
+
+        const userData = await getUser()
+        setUser(userData)
 
         const medications = await getMedications()
         if (medications.length > 0) {
@@ -29,6 +33,23 @@ export default function Dashboard() {
   }, [])
 
   const latestLog = weightLogs.at(-1)
+  const firstLog = weightLogs.find(l => l.weight_kg !== null)
+
+  // Stats — only calculated when we have the data we need
+  const stats = user && latestLog && firstLog ? (() => {
+    const totalChange = latestLog.weight_kg - firstLog.weight_kg
+    const pctLost = (totalChange / firstLog.weight_kg) * 100
+    const heightM = user.height / 100
+    const bmi = latestLog.weight_kg / (heightM * heightM)
+    const toGoal = latestLog.weight_kg - user.target_weight
+
+    const firstDate = new Date(firstLog.date)
+    const lastDate = new Date(latestLog.date)
+    const weeks = (lastDate - firstDate) / (1000 * 60 * 60 * 24 * 7)
+    const weeklyAvg = totalChange / weeks
+
+    return { totalChange, pctLost, bmi, toGoal, weeklyAvg }
+  })() : null
 
   return (
     <div style={{ padding: '2rem', maxWidth: '900px', margin: '0 auto' }}>
@@ -43,8 +64,16 @@ export default function Dashboard() {
       {!loading && !error && (
         <>
           {latestLog && (
-            <div style={{ marginBottom: '2rem', display: 'flex', gap: '2rem' }}>
+            <div style={{ marginBottom: '2rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+              {firstLog && <Stat label="Starting weight" value={`${firstLog.weight_kg} kg`} />}
               <Stat label="Latest weight" value={`${latestLog.weight_kg} kg`} />
+              {stats && <>
+                <Stat label="Total change" value={`${stats.totalChange.toFixed(1)} kg`} />
+                <Stat label="% lost" value={`${Math.abs(stats.pctLost).toFixed(1)}%`} />
+                <Stat label="Current BMI" value={stats.bmi.toFixed(1)} />
+                <Stat label="Weekly avg" value={`${stats.weeklyAvg.toFixed(2)} kg`} />
+                <Stat label="To goal" value={`${stats.toGoal.toFixed(1)} kg`} />
+              </>}
               <Stat label="Entries" value={weightLogs.length} />
               <Stat label="Dose changes" value={doses.length} />
             </div>

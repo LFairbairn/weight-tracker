@@ -6,9 +6,10 @@
 
 ## Up Next
 - [ ] CI: GitHub Actions workflow
-- [ ] Backend: stats endpoint (weight trend, dose correlation)
+- [ ] Backend: stats endpoint — rate of loss per dose period, R² linear regression fit per period, overall trend
 - [ ] Frontend: waist measurement chart or toggle
 - [ ] Frontend: add/edit weight log form
+- [x] Frontend: stat cards — starting weight, total change, % lost, BMI, weekly avg, to goal
 
 ## Completed
 - [x] Frontend: React app scaffold (Vite)
