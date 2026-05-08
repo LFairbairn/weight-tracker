@@ -23,3 +23,9 @@ export async function getMedicationDoses(medicationId) {
   if (!res.ok) throw new Error('Failed to fetch doses')
   return res.json()
 }
+
+export async function getStats() {
+  const res = await fetch(`${BASE}/stats`)
+  if (!res.ok) throw new Error('Failed to fetch stats')
+  return res.json()
+}

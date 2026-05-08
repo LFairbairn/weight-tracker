@@ -1,6 +1,7 @@
 import ReactApexChart from 'react-apexcharts'
 
-export default function WeightChart({ weightLogs, doses }) {
+
+export default function WeightChart({ weightLogs, doses, dosePeriods, showTrend }) {
   // Build the weight data series — ApexCharts wants [timestamp, value] pairs
   const weightData = weightLogs
     .filter(log => log.weight_kg !== null)
@@ -21,6 +22,28 @@ export default function WeightChart({ weightLogs, doses }) {
     },
   }))
 
+  // Build one straight trend line series per dose period
+  const trendSeries = (showTrend && dosePeriods)
+    ? dosePeriods.map(period => {
+        const startTs = new Date(period.start_date).getTime()
+        const endTs = new Date(period.end_date).getTime()
+        const totalWeeks = (endTs - startTs) / (1000 * 60 * 60 * 24 * 7)
+        const endWeight = period.intercept + period.slope_kg_per_week * totalWeeks
+        return {
+          name: `${period.dose}mg trend`,
+          data: [
+            { x: startTs, y: Math.round(period.intercept * 10) / 10 },
+            { x: endTs, y: Math.round(endWeight * 10) / 10 },
+          ],
+        }
+      })
+    : []
+
+  const allSeries = [
+    { name: 'Weight (kg)', data: weightData },
+    ...trendSeries,
+  ]
+
   const options = {
     chart: {
       type: 'line',
@@ -28,8 +51,14 @@ export default function WeightChart({ weightLogs, doses }) {
       toolbar: { show: false },
     },
     theme: { mode: 'dark' },
-    stroke: { curve: 'smooth', width: 2 },
-    markers: { size: 3 },
+    stroke: {
+      curve: ['smooth', ...Array(trendSeries.length).fill('straight')],
+      width: [2, ...Array(trendSeries.length).fill(2)],
+      dashArray: [0, ...Array(trendSeries.length).fill(5)],
+    },
+    markers: {
+      size: [3, ...Array(trendSeries.length).fill(0)],
+    },
     xaxis: {
       type: 'datetime',
       labels: { datetimeUTC: false },
@@ -42,10 +71,11 @@ export default function WeightChart({ weightLogs, doses }) {
     tooltip: {
       x: { format: 'dd MMM yyyy' },
     },
-    colors: ['#6366f1'],
+    colors: ['#6366f1', ...Array(trendSeries.length).fill('#ffffff')],
+    legend: { show: trendSeries.length > 0 },
   }
 
-  const series = [{ name: 'Weight (kg)', data: weightData }]
+  const series = allSeries
 
   if (weightData.length === 0) {
     return <p style={{ color: '#9ca3af' }}>No weight data yet.</p>

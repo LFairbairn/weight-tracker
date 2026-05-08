@@ -11,6 +11,8 @@ dependencies = [
     "alembic>=1.13.0",
     "pydantic>=2.0.0",
     "python-dotenv>=1.0.0",
+    "numpy>=2.2.6",
+    "scipy>=1.15.3",
 ]
 
 [dependency-groups]

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getWeightLogs, getMedications, getMedicationDoses, getUser } from '../api'
+import { getWeightLogs, getMedications, getMedicationDoses, getUser, getStats} from '../api'
 import WeightChart from './WeightChart'
 
 export default function Dashboard() {
@@ -8,6 +8,8 @@ export default function Dashboard() {
   const [doses, setDoses] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [statsData, setStatsData] = useState(null)
+  const [showTrend, setShowTrend] = useState(true)
 
   useEffect(() => {
     async function load() {
@@ -23,6 +25,10 @@ export default function Dashboard() {
           const allDoses = await getMedicationDoses(medications[0].id)
           setDoses(allDoses)
         }
+
+        const s = await getStats()
+        setStatsData(s)
+
       } catch (err) {
         setError(err.message)
       } finally {
@@ -74,6 +80,12 @@ export default function Dashboard() {
                 <Stat label="Weekly avg" value={`${stats.weeklyAvg.toFixed(2)} kg`} />
                 <Stat label="To goal" value={`${stats.toGoal.toFixed(1)} kg`} />
               </>}
+              {statsData && (
+                <Stat
+                  label={`Rate on ${statsData.dose_periods.at(-1).dose}mg`}
+                  value={`${statsData.dose_periods.at(-1).slope_kg_per_week} kg/wk`}
+                />
+              )}
               <Stat label="Entries" value={weightLogs.length} />
               <Stat label="Dose changes" value={doses.length} />
             </div>
@@ -84,10 +96,31 @@ export default function Dashboard() {
             borderRadius: '0.75rem',
             padding: '1.5rem',
           }}>
-            <h2 style={{ marginBottom: '1rem', fontSize: '1rem', color: '#d1d5db' }}>
-              Weight over time
-            </h2>
-            <WeightChart weightLogs={weightLogs} doses={doses} />
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h2 style={{ margin: 0, fontSize: '1rem', color: '#d1d5db' }}>
+                Weight over time
+              </h2>
+              <button
+                onClick={() => setShowTrend(t => !t)}
+                style={{
+                  background: showTrend ? '#6366f1' : '#374151',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '0.375rem',
+                  padding: '0.375rem 0.75rem',
+                  cursor: 'pointer',
+                  fontSize: '0.75rem',
+                }}
+              >
+                {showTrend ? 'Hide trend lines' : 'Show trend lines'}
+              </button>
+            </div>
+            <WeightChart
+              weightLogs={weightLogs}
+              doses={doses}
+              dosePeriods={statsData?.dose_periods}
+              showTrend={showTrend}
+            />
           </div>
         </>
       )}
