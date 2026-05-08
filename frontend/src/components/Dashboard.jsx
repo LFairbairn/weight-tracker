@@ -23,7 +23,8 @@ export default function Dashboard() {
         const medications = await getMedications()
         if (medications.length > 0) {
           const allDoses = await getMedicationDoses(medications[0].id)
-          setDoses(allDoses)
+          const namedDoses = allDoses.map(dose => ({ ...dose, medication_name: medications[0].name}))
+          setDoses(namedDoses)
         }
 
         const s = await getStats()
@@ -42,7 +43,7 @@ export default function Dashboard() {
   const firstLog = weightLogs.find(l => l.weight_kg !== null)
 
   // Stats — only calculated when we have the data we need
-  const stats = user && latestLog && firstLog ? (() => {
+  const stats = user && latestLog && firstLog && statsData ? (() => {
     const totalChange = latestLog.weight_kg - firstLog.weight_kg
     const pctLost = (totalChange / firstLog.weight_kg) * 100
     const heightM = user.height / 100
@@ -53,16 +54,15 @@ export default function Dashboard() {
     const lastDate = new Date(latestLog.date)
     const weeks = (lastDate - firstDate) / (1000 * 60 * 60 * 24 * 7)
     const weeklyAvg = totalChange / weeks
+    const weeksToGoal = toGoal / Math.abs(statsData.dose_periods.at(-1).slope_kg_per_week)
+    const projectedGoalDate = new Date(lastDate.getTime() + weeksToGoal * 7 * 24 * 60 * 60 * 1000)
 
-    return { totalChange, pctLost, bmi, toGoal, weeklyAvg }
+    return { totalChange, pctLost, bmi, toGoal, weeklyAvg, projectedGoalDate }
   })() : null
 
   return (
     <div style={{ padding: '2rem', maxWidth: '900px', margin: '0 auto' }}>
-      <h1 style={{ marginBottom: '0.25rem' }}>Weight Tracker</h1>
-      <p style={{ color: '#9ca3af', marginBottom: '2rem' }}>
-        Wegovy dose changes shown as orange markers
-      </p>
+      <h1 style={{ marginBottom: '2rem' }}>Weight Tracker</h1>
 
       {loading && <p>Loading...</p>}
       {error && <p style={{ color: '#ef4444' }}>Error: {error}</p>}
@@ -86,8 +86,9 @@ export default function Dashboard() {
                   value={`${statsData.dose_periods.at(-1).slope_kg_per_week} kg/wk`}
                 />
               )}
-              <Stat label="Entries" value={weightLogs.length} />
-              <Stat label="Dose changes" value={doses.length} />
+              {stats && (
+                <Stat label="Projected goal" value={stats.projectedGoalDate.toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'})} />
+              )}
             </div>
           )}
 
@@ -97,9 +98,12 @@ export default function Dashboard() {
             padding: '1.5rem',
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <h2 style={{ margin: 0, fontSize: '1rem', color: '#d1d5db' }}>
-                Weight over time
-              </h2>
+              <div>
+                <h2 style={{ margin: 0, fontSize: '1rem', color: '#d1d5db' }}>Weight over time</h2>
+                <p style={{ margin: '0.25rem 0 0', fontSize: '0.75rem', color: '#6b7280' }}>
+                  Weight loss medication dose changes shown as orange markers
+                </p>
+              </div>
               <button
                 onClick={() => setShowTrend(t => !t)}
                 style={{

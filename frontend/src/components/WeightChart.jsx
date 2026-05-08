@@ -16,7 +16,8 @@ export default function WeightChart({ weightLogs, doses, dosePeriods, showTrend 
     borderColor: '#f97316',
     strokeDashArray: 4,
     label: {
-      text: `${dose.dose}${dose.unit}`,
+      text: `${dose.medication_name[0]} · ${dose.dose}${dose.unit}`,
+      orientation: 'vertical',
       style: { color: '#fff', background: '#f97316' },
       position: 'top',
     },

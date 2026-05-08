@@ -8,7 +8,7 @@
 - [ ] Frontend: projected goal date stat card — calculated from current dose regression
 - [ ] Frontend: add/edit weight log form
 - [ ] Feature: CSV upload + first-time onboarding flow (detect no user → setup screen → upload weight log CSV → optional medication doses CSV → dashboard)
-- [ ] Example data: example-data/ folder committed to repo with mock weight_log.csv + medication_doses.csv (portfolio demo — design a dataset that clearly shows dose-response trends)
+- [ ] Example data: example-data/ folder committed to repo with mock weight_log.csv + medication_doses.csv (portfolio demo — design a dataset that clearly shows dose-response trends, include medication switch mid-journey e.g. Wegovy → Mounjaro)
 
 ## Completed
 - [x] CI: GitHub Actions workflow — runs pytest on every push to main
