@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from app.routers import users, weight_logs, medications, stats
+from app.routers import users, weight_logs, medications, stats, upload
 
 app = FastAPI(title="Weight Tracker")
 
@@ -8,6 +8,7 @@ app.include_router(users.router)
 app.include_router(weight_logs.router)
 app.include_router(medications.router)
 app.include_router(stats.router)
+app.include_router(upload.router)
 
 
 @app.get("/health")
