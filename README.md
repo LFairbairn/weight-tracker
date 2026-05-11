@@ -1,19 +1,19 @@
 # Weight Tracker
 
-A personal weight tracking app with medication dose overlay — visualise how medication adjustments correlate with your weight loss over time.
+A personal weight tracking app with medication dose overlay — visualise how medication adjustments correlate with weight loss over time.
 
 ---
 
 ## Features
 
-- Log weight entries with notes
-- Visualise weight over time with adjustable chart scales (1 week → all time)
-- Overlay medication dose changes as annotations on the chart
-- BMI auto-calculation
-- Goal progress tracking
-- Linear regression trend projections (full history + rolling window)
-- Per-dose weight loss statistics
-- Historic data import
+- Import historic weight data via CSV upload
+- Visualise weight over time with medication dose change annotations
+- Per-dose linear regression trend lines with R² fit scores
+- Stat cards: starting weight, current weight, total change, % lost, BMI, weekly average, to goal, current dose rate, projected goal date
+- First-time onboarding flow: enter your details, upload your data, see your dashboard
+
+**Future enhancements (not in current scope):**
+- Manual add/edit weight log form — in a fully commercial product this would be a core feature; currently users add entries via CSV re-upload
 
 ---
 
@@ -56,32 +56,24 @@ graph TD
 
 ```mermaid
 flowchart TD
-    A([User opens app]) --> B[Dashboard]
+    A([User opens app]) --> H{First time?}
+
+    H -->|No| B[Dashboard]
+    H -->|Yes| G[Onboarding]
+
+    G --> G1[Option 1: Upload three CSVs\nuser.csv + weight_log.csv\n+ medication_doses.csv]
+    G --> G2[Option 2: Manual form entry\n+ upload weight_log.csv\n+ medication_doses.csv]
+    G1 --> B
+    G2 --> B
 
     B --> C[View weight chart]
-    C --> C1[Adjust time scale\n1w / 1m / 3m / 6m / 1y / all]
     C --> C2[See medication dose\nchange annotations]
-    C --> C3[View trend projection\nfull history + rolling window]
-
-    B --> D[Log weight entry]
-    D --> D1[Enter weight + optional notes]
-    D1 --> D2[Entry saved → chart updates]
-
-    B --> E[Manage medications]
-    E --> E1[Add medication]
-    E --> E2[Log dose change]
-    E2 --> E3[Dose marker appears on chart]
+    C --> C3[Toggle per-dose\nregression trend lines]
 
     B --> F[View stats]
-    F --> F1[Current weight + trend]
-    F --> F2[BMI card]
-    F --> F3[Goal progress bar]
-    F --> F4[Per-dose weight loss breakdown]
-    F --> F5[Waist measurement chart\nwith medication overlay]
-
-    B --> G[Import historic data]
-    G --> G1[Bulk upload past entries]
-    G1 --> D2
+    F --> F1[Weight change + % lost]
+    F --> F2[BMI + goal progress]
+    F --> F3[Current dose rate + projected goal date]
 ```
 
 ---
@@ -110,7 +102,7 @@ weight-tracker/
 | Table | Fields |
 |---|---|
 | `users` | id, name, height, target_weight, weight_unit (kg/lbs/st), measurement_unit (cm/inches), created_at |
-| `weight_logs` | id, user_id, date, weight_kg, waist_cm, notes |
+| `weight_logs` | id, user_id, date, weight_kg, notes |
 | `medications` | id, user_id, name, start_date |
 | `medication_doses` | id, medication_id, dose, unit (mg/ml), date_changed |
 

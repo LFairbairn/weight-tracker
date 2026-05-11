@@ -1,7 +1,7 @@
 import ReactApexChart from 'react-apexcharts'
 
 
-export default function WeightChart({ weightLogs, doses, dosePeriods, showTrend }) {
+export default function WeightChart({ weightLogs, doses, dosePeriods, showTrend, showWeight }) {
   // Build the weight data series — ApexCharts wants [timestamp, value] pairs
   const weightData = weightLogs
     .filter(log => log.weight_kg !== null)
@@ -40,8 +40,10 @@ export default function WeightChart({ weightLogs, doses, dosePeriods, showTrend 
       })
     : []
 
+  const weightSeries = showWeight ? [{ name: 'Weight (kg)', data: weightData }] : []
+
   const allSeries = [
-    { name: 'Weight (kg)', data: weightData },
+    ...weightSeries,
     ...trendSeries,
   ]
 
@@ -53,12 +55,12 @@ export default function WeightChart({ weightLogs, doses, dosePeriods, showTrend 
     },
     theme: { mode: 'dark' },
     stroke: {
-      curve: ['smooth', ...Array(trendSeries.length).fill('straight')],
-      width: [2, ...Array(trendSeries.length).fill(2)],
-      dashArray: [0, ...Array(trendSeries.length).fill(5)],
+      curve: [...Array(weightSeries.length).fill('smooth'), ...Array(trendSeries.length).fill('straight')],
+      width: [...Array(weightSeries.length).fill(2), ...Array(trendSeries.length).fill(2)],
+      dashArray: [...Array(weightSeries.length).fill(0), ...Array(trendSeries.length).fill(5)],
     },
     markers: {
-      size: [3, ...Array(trendSeries.length).fill(0)],
+      size: [...Array(weightSeries.length).fill(3), ...Array(trendSeries.length).fill(0)],
     },
     xaxis: {
       type: 'datetime',
@@ -72,7 +74,7 @@ export default function WeightChart({ weightLogs, doses, dosePeriods, showTrend 
     tooltip: {
       x: { format: 'dd MMM yyyy' },
     },
-    colors: ['#6366f1', ...Array(trendSeries.length).fill('#ffffff')],
+    colors: [...Array(weightSeries.length).fill('#6366f1'), ...Array(trendSeries.length).fill('#ffffff')],
     legend: { show: trendSeries.length > 0 },
   }
 

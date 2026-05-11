@@ -10,6 +10,7 @@ export default function Dashboard() {
   const [error, setError] = useState(null)
   const [statsData, setStatsData] = useState(null)
   const [showTrend, setShowTrend] = useState(true)
+  const [showWeight, setShowWeight] = useState(true)
 
   useEffect(() => {
     async function load() {
@@ -104,26 +105,43 @@ export default function Dashboard() {
                   Weight loss medication dose changes shown as orange markers
                 </p>
               </div>
-              <button
-                onClick={() => setShowTrend(t => !t)}
-                style={{
-                  background: showTrend ? '#6366f1' : '#374151',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '0.375rem',
-                  padding: '0.375rem 0.75rem',
-                  cursor: 'pointer',
-                  fontSize: '0.75rem',
-                }}
-              >
-                {showTrend ? 'Hide trend lines' : 'Show trend lines'}
-              </button>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <button
+                  onClick={() => setShowTrend(t => !t)}
+                  style={{
+                    background: showTrend ? '#6366f1' : '#374151',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '0.375rem',
+                    padding: '0.375rem 0.75rem',
+                    cursor: 'pointer',
+                    fontSize: '0.75rem',
+                  }}
+                >
+                  {showTrend ? 'Hide trend lines' : 'Show trend lines'}
+                </button>
+                <button
+                  onClick={() => setShowWeight(t => !t)}
+                  style={{
+                    background: showWeight ? '#6366f1' : '#374151',
+                    color: '#fff',
+                    border: 'none',
+                    borderRadius: '0.375rem',
+                    padding: '0.375rem 0.75rem',
+                    cursor: 'pointer',
+                    fontSize: '0.75rem',
+                  }}
+                >
+                  {showWeight ? 'Hide weight line' : 'Show weight line'}
+                </button>
+              </div>
             </div>
             <WeightChart
               weightLogs={weightLogs}
               doses={doses}
               dosePeriods={statsData?.dose_periods}
               showTrend={showTrend}
+              showWeight={showWeight}
             />
           </div>
         </>
