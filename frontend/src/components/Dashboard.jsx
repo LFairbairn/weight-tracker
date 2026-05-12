@@ -26,9 +26,12 @@ export default function Dashboard() {
 
         const medications = await getMedications()
         if (medications.length > 0) {
-          const allDoses = await getMedicationDoses(medications[0].id)
-          const namedDoses = allDoses.map(dose => ({ ...dose, medication_name: medications[0].name}))
-          setDoses(namedDoses)
+          const allDoses = []
+          for (const med of medications) {
+            const doses = await getMedicationDoses(med.id)
+            doses.forEach(dose => allDoses.push({ ...dose, medication_name: med.name }))
+          }
+          setDoses(allDoses)
         }
 
         const s = await getStats()
@@ -92,6 +95,7 @@ export default function Dashboard() {
           {!user && <Onboarding onComplete={() => window.location.reload()} />}
           {user && latestLog && (<>
             <div style={{ marginBottom: '2rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+              {firstLog && <Stat label="Start date" value={new Date(firstLog.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })} />}
               {firstLog && <Stat label="Starting weight" value={`${firstLog.weight_kg} kg`} />}
               <Stat label="Latest weight" value={`${latestLog.weight_kg} kg`} />
               {stats && <>
@@ -123,6 +127,11 @@ export default function Dashboard() {
                 <p style={{ margin: '0.25rem 0 0', fontSize: '0.75rem', color: '#6b7280' }}>
                   Weight loss medication dose changes shown as orange markers
                 </p>
+                {doses.length > 0 && (
+                  <p style={{ margin: '0.25rem 0 0', fontSize: '0.7rem', color: '#4b5563' }}>
+                    {[...new Set(doses.map(d => d.medication_name))].map(name => `${name[0]} = ${name}`).join('  ·  ')}
+                  </p>
+                )}
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 <button
