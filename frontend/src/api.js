@@ -41,3 +41,9 @@ export async function uploadCSV(endpoint, file) {
   if (!res.ok) throw new Error(`Upload failed: ${endpoint}`)
   return res.json()
 }
+
+export async function resetData() {
+  const res = await fetch(`${BASE}/upload/reset`, { method: 'POST' })
+  if (!res.ok) throw new Error('Reset failed')
+  return res.json()
+}

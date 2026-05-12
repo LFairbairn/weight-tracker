@@ -107,3 +107,19 @@ async def upload_user(file: UploadFile = File(...), db: Session = Depends(get_db
     db.add(user)
     db.commit()
     return {"created": user.name}
+
+@router.post("/reset")
+def reset_data(db: Session = Depends(get_db)):
+    existing = db.query(User).first()
+    if existing:
+        db.query(MedicationDose).filter(
+            MedicationDose.medication_id.in_(
+                db.query(Medication.id).filter(Medication.user_id == existing.id)
+            )
+        ).delete(synchronize_session=False)
+        db.query(Medication).filter(Medication.user_id == existing.id).delete()
+        db.query(WeightLog).filter(WeightLog.user_id == existing.id).delete()
+        db.query(User).filter(User.id == existing.id).delete()
+    db.commit()
+    return {"reset": True}
+

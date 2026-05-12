@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getWeightLogs, getMedications, getMedicationDoses, getUser, getStats} from '../api'
+import { getWeightLogs, getMedications, getMedicationDoses, getUser, getStats, resetData } from '../api'
 import WeightChart from './WeightChart'
 import Onboarding from './Onboarding'
 
@@ -66,7 +66,23 @@ export default function Dashboard() {
 
   return (
     <div style={{ padding: '2rem', maxWidth: '900px', margin: '0 auto' }}>
-      <h1 style={{ marginBottom: '2rem' }}>Weight Tracker</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+        <h1 style={{ margin: 0 }}>Weight Tracker</h1>
+        <button
+          onClick={async () => { await resetData(); window.location.reload() }}
+          style={{
+            background: '#374151',
+            color: '#9ca3af',
+            border: 'none',
+            borderRadius: '0.375rem',
+            padding: '0.375rem 0.75rem',
+            cursor: 'pointer',
+            fontSize: '0.75rem',
+          }}
+        >
+          Reset data
+        </button>
+      </div>
 
       {loading && <p>Loading...</p>}
       {error && <p style={{ color: '#ef4444' }}>Error: {error}</p>}
