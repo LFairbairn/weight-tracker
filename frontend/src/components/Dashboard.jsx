@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getWeightLogs, getMedications, getMedicationDoses, getUser, getStats} from '../api'
 import WeightChart from './WeightChart'
+import Onboarding from './Onboarding'
 
 export default function Dashboard() {
   const [user, setUser] = useState(null)
@@ -15,11 +16,13 @@ export default function Dashboard() {
   useEffect(() => {
     async function load() {
       try {
-        const logs = await getWeightLogs()
-        setWeightLogs(logs)
-
         const userData = await getUser()
         setUser(userData)
+
+        if (!userData) return
+
+        const logs = await getWeightLogs()
+        setWeightLogs(logs)
 
         const medications = await getMedications()
         if (medications.length > 0) {
@@ -70,7 +73,8 @@ export default function Dashboard() {
 
       {!loading && !error && (
         <>
-          {latestLog && (
+          {!user && <Onboarding onComplete={() => window.location.reload()} />}
+          {user && latestLog && (<>
             <div style={{ marginBottom: '2rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
               {firstLog && <Stat label="Starting weight" value={`${firstLog.weight_kg} kg`} />}
               <Stat label="Latest weight" value={`${latestLog.weight_kg} kg`} />
@@ -91,7 +95,6 @@ export default function Dashboard() {
                 <Stat label="Projected goal" value={stats.projectedGoalDate.toLocaleDateString('en-GB', {day: 'numeric', month: 'short', year: 'numeric'})} />
               )}
             </div>
-          )}
 
           <div style={{
             background: '#1f2937',
@@ -144,6 +147,7 @@ export default function Dashboard() {
               showWeight={showWeight}
             />
           </div>
+          </>)}
         </>
       )}
     </div>

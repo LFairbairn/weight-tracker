@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from scipy.stats import linregress
 from datetime import timedelta
 from app.database import get_db
+from app.deps import get_current_user
 from app.models.weight_log import WeightLog
 from app.models.medication_dose import MedicationDose
 
@@ -11,9 +12,10 @@ router = APIRouter(prefix="/stats", tags=["stats"])
 
 @router.get("")
 def get_stats(db: Session = Depends(get_db)):
+    user = get_current_user(db)
     logs = (
         db.query(WeightLog)
-        .filter(WeightLog.user_id == 1)
+        .filter(WeightLog.user_id == user.id)
         .order_by(WeightLog.date)
         .all()
     )

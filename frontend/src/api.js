@@ -2,6 +2,7 @@ const BASE = '/api'
 
 export async function getUser() {
   const res = await fetch(`${BASE}/users/me`)
+  if(res.status === 404) return null
   if (!res.ok) throw new Error('Failed to fetch user')
   return res.json()
 }
@@ -27,5 +28,16 @@ export async function getMedicationDoses(medicationId) {
 export async function getStats() {
   const res = await fetch(`${BASE}/stats`)
   if (!res.ok) throw new Error('Failed to fetch stats')
+  return res.json()
+}
+
+export async function uploadCSV(endpoint, file) {
+  const formData = new FormData()
+  formData.append('file', file)
+  const res = await fetch(`${BASE}/${endpoint}`, {
+    method: 'POST',
+    body: formData,
+  })
+  if (!res.ok) throw new Error(`Upload failed: ${endpoint}`)
   return res.json()
 }

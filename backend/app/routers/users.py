@@ -25,7 +25,7 @@ def create_user(user_in: UserCreate, db: Session = Depends(get_db)):
 
 @router.get("/me", response_model=UserResponse)
 def get_user(db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.id == CURRENT_USER_ID).first()
+    user = db.query(User).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
@@ -33,7 +33,7 @@ def get_user(db: Session = Depends(get_db)):
 
 @router.patch("/me", response_model=UserResponse)
 def update_user(user_in: UserUpdate, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.id == CURRENT_USER_ID).first()
+    user = db.query(User).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     for field, value in user_in.model_dump(exclude_unset=True).items():
