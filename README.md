@@ -133,9 +133,9 @@ flowchart TD
     C --> C3[Toggle per-dose regression trend lines]
 
     B --> F[View stats]
-    F --> F1[Weight change + % lost]
-    F --> F2[BMI + goal progress]
-    F --> F3[Current dose rate + projected goal date]
+    F --> F1[Weight change and pct lost]
+    F --> F2[BMI and goal progress]
+    F --> F3[Current dose rate and projected goal date]
 ```
 
 ---
