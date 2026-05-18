@@ -1,6 +1,7 @@
 # Weight Tracker
 
 [![CI](https://github.com/LFairbairn/weight-tracker/actions/workflows/ci.yml/badge.svg)](https://github.com/LFairbairn/weight-tracker/actions/workflows/ci.yml)
+![Coverage](https://img.shields.io/badge/coverage-97%25-brightgreen)
 
 A personal weight tracking app with medication dose overlay — visualise how GLP-1 medication adjustments correlate with weight loss over time.
 

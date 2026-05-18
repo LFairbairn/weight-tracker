@@ -1,14 +1,16 @@
 import csv
 import io
 from datetime import datetime
-from fastapi import APIRouter, Depends, UploadFile, File
+
+from fastapi import APIRouter, Depends, File, UploadFile
 from sqlalchemy.orm import Session
+
 from app.database import get_db
 from app.deps import get_current_user
-from app.models.user import User
-from app.models.weight_log import WeightLog
 from app.models.medication import Medication
 from app.models.medication_dose import MedicationDose
+from app.models.user import User
+from app.models.weight_log import WeightLog
 
 router = APIRouter(prefix="/upload", tags=["uploads"])
 
@@ -60,7 +62,8 @@ async def upload_medication_doses(file: UploadFile = File(...), db: Session = De
     for row in rows:
         name = row["medication_name"].strip()
         if name not in medications:
-            med = Medication(user_id=user.id, name=name, start_date=datetime.strptime(row["date_changed"].strip(), "%Y-%m-%d").date())
+            start_date = datetime.strptime(row["date_changed"].strip(), "%Y-%m-%d").date()
+            med = Medication(user_id=user.id, name=name, start_date=start_date)
             db.add(med)
             db.flush()
             medications[name] = med.id

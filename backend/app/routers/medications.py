@@ -1,13 +1,14 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from typing import List
 
 from app.database import get_db
 from app.deps import get_current_user
 from app.models.medication import Medication
 from app.models.medication_dose import MedicationDose
-from app.schemas.medication import MedicationCreate, MedicationUpdate, MedicationResponse
-from app.schemas.medication_dose import MedicationDoseCreate, MedicationDoseUpdate, MedicationDoseResponse
+from app.schemas.medication import MedicationCreate, MedicationResponse, MedicationUpdate
+from app.schemas.medication_dose import MedicationDoseCreate, MedicationDoseResponse, MedicationDoseUpdate
 
 router = APIRouter(prefix="/medications", tags=["medications"])
 
@@ -58,7 +59,12 @@ def list_doses(medication_id: int, db: Session = Depends(get_db)):
     med = db.query(Medication).filter(Medication.id == medication_id, Medication.user_id == user.id).first()
     if not med:
         raise HTTPException(status_code=404, detail="Medication not found")
-    return db.query(MedicationDose).filter(MedicationDose.medication_id == medication_id).order_by(MedicationDose.date_changed).all()
+    return (
+        db.query(MedicationDose)
+        .filter(MedicationDose.medication_id == medication_id)
+        .order_by(MedicationDose.date_changed)
+        .all()
+    )
 
 
 @router.post("/{medication_id}/doses", response_model=MedicationDoseResponse, status_code=201)
@@ -76,7 +82,9 @@ def create_dose(medication_id: int, dose_in: MedicationDoseCreate, db: Session =
 
 @router.patch("/{medication_id}/doses/{dose_id}", response_model=MedicationDoseResponse)
 def update_dose(medication_id: int, dose_id: int, dose_in: MedicationDoseUpdate, db: Session = Depends(get_db)):
-    dose = db.query(MedicationDose).filter(MedicationDose.id == dose_id, MedicationDose.medication_id == medication_id).first()
+    dose = db.query(MedicationDose).filter(
+        MedicationDose.id == dose_id, MedicationDose.medication_id == medication_id
+    ).first()
     if not dose:
         raise HTTPException(status_code=404, detail="Dose not found")
     for field, value in dose_in.model_dump(exclude_unset=True).items():
@@ -88,7 +96,9 @@ def update_dose(medication_id: int, dose_id: int, dose_in: MedicationDoseUpdate,
 
 @router.delete("/{medication_id}/doses/{dose_id}", status_code=204)
 def delete_dose(medication_id: int, dose_id: int, db: Session = Depends(get_db)):
-    dose = db.query(MedicationDose).filter(MedicationDose.id == dose_id, MedicationDose.medication_id == medication_id).first()
+    dose = db.query(MedicationDose).filter(
+        MedicationDose.id == dose_id, MedicationDose.medication_id == medication_id
+    ).first()
     if not dose:
         raise HTTPException(status_code=404, detail="Dose not found")
     db.delete(dose)

@@ -26,8 +26,11 @@ jobs:
       - name: Install dependencies
         run: uv sync --dev
 
+      - name: Lint
+        run: uv run ruff check app/ tests/
+
       - name: Run tests with coverage
-        run: uv run pytest tests/ -v --cov=app --cov-report=term-missing
+        run: uv run pytest tests/ -v --cov=app --cov-report=term-missing --cov-report=xml
 
   test-frontend:
     runs-on: ubuntu-latest
@@ -48,6 +51,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Lint
+        run: npm run lint
 
       - name: Run tests with coverage
         run: npm run coverage

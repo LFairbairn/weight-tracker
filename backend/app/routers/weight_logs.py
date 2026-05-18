@@ -1,11 +1,12 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from typing import List
 
 from app.database import get_db
 from app.deps import get_current_user
 from app.models.weight_log import WeightLog
-from app.schemas.weight_log import WeightLogCreate, WeightLogUpdate, WeightLogResponse
+from app.schemas.weight_log import WeightLogCreate, WeightLogResponse, WeightLogUpdate
 
 router = APIRouter(prefix="/weight-logs", tags=["weight-logs"])
 

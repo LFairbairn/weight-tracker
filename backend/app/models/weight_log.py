@@ -1,8 +1,10 @@
-from app.database import Base
-from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import String, ForeignKey, func, Date
-from datetime import datetime, date
+from datetime import date, datetime
 from typing import Optional
+
+from sqlalchemy import Date, ForeignKey, String, func
+from sqlalchemy.orm import Mapped, mapped_column
+
+from app.database import Base
 
 
 class WeightLog(Base):

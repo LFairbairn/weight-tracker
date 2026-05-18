@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from app.routers import users, weight_logs, medications, stats, upload
+from app.routers import medications, stats, upload, users, weight_logs
 
 app = FastAPI(title="Weight Tracker")
 

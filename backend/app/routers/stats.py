@@ -1,12 +1,13 @@
-from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
-from scipy.stats import linregress
 from datetime import timedelta
+
+from fastapi import APIRouter, Depends
+from scipy.stats import linregress
+from sqlalchemy.orm import Session
+
 from app.database import get_db
 from app.deps import get_current_user
-from app.models.weight_log import WeightLog
 from app.models.medication_dose import MedicationDose
-
+from app.models.weight_log import WeightLog
 
 router = APIRouter(prefix="/stats", tags=["stats"])
 
@@ -35,7 +36,7 @@ def get_stats(db: Session = Depends(get_db)):
         end = doses[i + 1].date_changed - timedelta(days=1) if i + 1 < len(doses) else last_log_date
 
         # filter logs that fall within this period and have a weight value
-        period_logs = [l for l in logs if start <= l.date <= end and l.weight_kg is not None]
+        period_logs = [log for log in logs if start <= log.date <= end and log.weight_kg is not None]
 
         if len(period_logs) < 2:
             # can't do regression with fewer than 2 points
@@ -51,8 +52,8 @@ def get_stats(db: Session = Depends(get_db)):
             continue
 
         # convert dates to weeks since start of this period
-        x = [(l.date - start).days / 7 for l in period_logs]
-        y = [l.weight_kg for l in period_logs]
+        x = [(log.date - start).days / 7 for log in period_logs]
+        y = [log.weight_kg for log in period_logs]
 
         result = linregress(x, y)
 
@@ -68,8 +69,8 @@ def get_stats(db: Session = Depends(get_db)):
         })
 
     # overall trend across all logs
-    all_x = [(l.date - logs[0].date).days / 7 for l in logs if l.weight_kg is not None]
-    all_y = [l.weight_kg for l in logs if l.weight_kg is not None]
+    all_x = [(log.date - logs[0].date).days / 7 for log in logs if log.weight_kg is not None]
+    all_y = [log.weight_kg for log in logs if log.weight_kg is not None]
     overall = linregress(all_x, all_y)
 
     return {
