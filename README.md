@@ -1,5 +1,7 @@
 # Weight Tracker
 
+[![CI](https://github.com/LFairbairn/weight-tracker/actions/workflows/ci.yml/badge.svg)](https://github.com/LFairbairn/weight-tracker/actions/workflows/ci.yml)
+
 A personal weight tracking app with medication dose overlay — visualise how medication adjustments correlate with weight loss over time.
 
 ---
