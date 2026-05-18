@@ -9,10 +9,10 @@ A personal weight tracking app with medication dose overlay — visualise how GL
 ## Screenshots
 
 **Alex — Wegovy, 52 weeks, reaches goal weight**
-<img src="assets/User A.png" width="600" alt="User A dashboard showing Wegovy dose progression and weight loss trend" />
+<img src="Assets/User A.png" width="600" alt="User A dashboard showing Wegovy dose progression and weight loss trend" />
 
 **Sam — Wegovy plateau, switches to Mounjaro**
-<img src="assets/User B.png" width="600" alt="User B dashboard showing Wegovy plateau and strong Mounjaro response" />
+<img src="Assets/User B.png" width="600" alt="User B dashboard showing Wegovy plateau and strong Mounjaro response" />
 
 ---
 

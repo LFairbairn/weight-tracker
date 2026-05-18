@@ -98,6 +98,7 @@ export default function Dashboard() {
               {firstLog && <Stat label="Start date" value={new Date(firstLog.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })} />}
               {firstLog && <Stat label="Starting weight" value={`${firstLog.weight_kg} kg`} />}
               <Stat label="Latest weight" value={`${latestLog.weight_kg} kg`} />
+              {user && <Stat label="Goal weight" value={`${user.target_weight} kg`} />}
               {stats && <>
                 <Stat label="Total change" value={`${stats.totalChange.toFixed(1)} kg`} />
                 <Stat label="% lost" value={`${Math.abs(stats.pctLost).toFixed(1)}%`} />
