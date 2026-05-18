@@ -100,14 +100,14 @@ Wegovy,0.5,mg,2025-02-19
 
 ```mermaid
 graph TD
-    subgraph Docker Compose
-        FE[Frontend Container\nReact app]
-        BE[Backend Container\nFastAPI]
-        DB[(Database Container\nPostgres)]
+    subgraph "Docker Compose"
+        FE[Frontend Container - React]
+        BE[Backend Container - FastAPI]
+        DB[(Database Container - Postgres)]
     end
 
     User([User / Browser]) -->|HTTP requests| FE
-    FE -->|REST API calls\nJSON| BE
+    FE -->|REST API calls - JSON| BE
     BE -->|SQL queries| DB
     DB -->|query results| BE
     BE -->|JSON responses| FE
@@ -125,12 +125,12 @@ flowchart TD
     H -->|No| B[Dashboard]
     H -->|Yes| G[Onboarding]
 
-    G --> G1[Upload three CSVs\nuser.csv + weight_log.csv\n+ medication_doses.csv]
+    G --> G1[Upload user.csv + weight_log.csv + medication_doses.csv]
     G1 --> B
 
     B --> C[View weight chart]
-    C --> C2[See medication dose\nchange annotations]
-    C --> C3[Toggle per-dose\nregression trend lines]
+    C --> C2[See medication dose change annotations]
+    C --> C3[Toggle per-dose regression trend lines]
 
     B --> F[View stats]
     F --> F1[Weight change + % lost]
