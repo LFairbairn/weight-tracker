@@ -4,12 +4,11 @@
 
 ---
 
-## Up Next
-- [ ] Feature: CSV upload + first-time onboarding flow (detect no user → upload three CSVs: user.csv, weight_log.csv, medication_doses.csv → dashboard); offer both CSV upload and manual form entry paths
-- [ ] Example data: example-data/ folder committed to repo with user.csv + weight_log.csv + medication_doses.csv (portfolio demo — self-contained, no manual input required; dataset should clearly show dose-response trends, include medication switch mid-journey e.g. Wegovy → Mounjaro)
-- [ ] README: polish with screenshots of dashboard, chart, and onboarding flow — add to Getting Started section
-
 ## Completed
+- [x] README: polish with screenshots, Getting Started, corrected API docs, example data section
+- [x] Example data: user-a-wegovy/ and user-b-mounjaro-switch/ committed to repo
+- [x] Feature: CSV upload + first-time onboarding flow
+- [x] Testing: pytest-cov, Vitest + RTL, ruff linting, ESLint in CI, 38 backend tests at 97% coverage
 - [x] Frontend: toggle to hide/show main weight line on chart (trend lines viewable in isolation)
 - [x] Frontend: projected goal date stat card — calculated from current dose regression
 - [x] Frontend: add/edit weight log form — deferred, noted in README as future commercial enhancement

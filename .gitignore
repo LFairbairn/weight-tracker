@@ -23,3 +23,10 @@ build/
 # Docker
 *.log
 backend/test.db
+
+# Coverage
+backend/.coverage
+backend/coverage.xml
+
+# Local docs
+PROJECT_SUMMARY.md
